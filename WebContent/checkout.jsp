@@ -194,7 +194,7 @@
                             </li>
                             <li class="list-group-item d-flex justify-content-between border-top px-0 py-3 fs-4 fw-bold text-dark">
                                 <span>Total Payable:</span>
-                                <span class="text-success">₹<%= String.format("%.2f", grandTotal) %></span>
+                                <span class="text-success" id="grandTotalText">₹<%= String.format("%.2f", grandTotal) %></span>
                             </li>
                         </ul>
                     </div>
@@ -210,10 +210,11 @@
                         <span class="badge bg-light text-muted border">Auto-Filled from Profile</span>
                     </div>
                     <div class="card-body p-4">
-                        <form action="OrderServlet" method="post">
-                            <!-- ✅ Explicit Hidden Inputs for Guaranteed Discount Delivery -->
+                        <form id="checkoutForm" action="OrderServlet" method="post">
+                            <!-- Explicit Hidden Inputs -->
                             <input type="hidden" name="discountAmount" value="<%= discountAmount %>">
                             <input type="hidden" name="couponCode" value="<%= appliedCoupon != null ? appliedCoupon.getCouponCode() : "" %>">
+                            <input type="hidden" id="grandTotalVal" value="<%= grandTotal %>">
 
                             <div class="row g-3">
                                 <div class="col-md-6">
@@ -233,10 +234,10 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Payment Mode</label>
-                                    <select class="form-select fw-semibold" name="paymentType" required>
+                                    <select class="form-select fw-semibold" id="paymentTypeSelect" name="paymentType" required>
                                         <option value="COD" selected>💵 Cash On Delivery (COD)</option>
-                                        <option value="UPI">📱 UPI / Net Banking</option>
-                                        <option value="CARD">💳 Credit / Debit Card</option>
+                                        <option value="UPI">📱 UPI / Net Banking (Online Mock)</option>
+                                        <option value="CARD">💳 Credit / Debit Card (Online Mock)</option>
                                     </select>
                                 </div>
 
@@ -261,5 +262,22 @@
 
     <!-- Bootstrap 5 JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- 🟢 Mock Payment Interceptor Script -->
+    <script>
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+        var paymentType = document.getElementById('paymentTypeSelect').value;
+
+        // Agar user ne UPI ya CARD select kiya hai, toh hamare Mock Payment page par bhej do
+        if (paymentType === 'UPI' || paymentType === 'CARD') {
+            e.preventDefault(); // Normal form submit roko
+
+            var grandTotal = document.getElementById('grandTotalVal').value;
+            
+            // User ko mock-payment.jsp par redirect karo sath me amount bhej kar
+            window.location.href = "mock-payment.jsp?amount=" + grandTotal;
+        }
+    });
+    </script>
 </body>
 </html>

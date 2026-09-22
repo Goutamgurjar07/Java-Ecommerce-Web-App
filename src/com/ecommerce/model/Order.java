@@ -9,14 +9,15 @@ public class Order {
     private String email;
     private String phone;
     private String productName;
-    private double price;              // Original MRP / Item Total
+    private double price;            // Original MRP / Item Total
     private double discountAmount;     // Saved Coupon Discount Amount
     private String couponCode;         // Applied Promo Code (e.g. SAVE10)
     private double totalAmount;        // Final Paid Amount (Price - Discount)
-    private String paymentType;
-    private String status;
+    private String paymentType;        // COD / UPI / CARD
+    private String status;             // Placed / Pending / Delivered / Cancelled
     private String address;
     private Timestamp orderDate;
+    private String razorpayPaymentId;  // 🟢 Added for Online Payment Tracking
 
     public Order() {}
 
@@ -131,5 +132,14 @@ public class Order {
 
     public void setOrderDate(Timestamp orderDate) {
         this.orderDate = orderDate;
+    }
+
+    // 🟢 Razorpay Payment ID Getters and Setters
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
     }
 }
